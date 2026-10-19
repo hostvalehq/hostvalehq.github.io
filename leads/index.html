@@ -244,7 +244,7 @@ function hook(l) {
 }
 var TEMPLATES = {
   opener: { label: "First message", make: function (l) {
-    return hi() + ", is this " + shortName(l) + "? 🙂\n\n" + (function (h) { return h.charAt(0).toUpperCase() + h.slice(1); })(hook(l));
+    return hi() + ", is this " + shortName(l) + "? 🙂 " + pick(["I'm " + S.me + ", I build apps for shortlet owners (not booking 😅).", "I'm " + S.me + ". Not a guest 😅 I build apps for shortlet owners."]) + "\n\n" + (function (h) { return h.charAt(0).toUpperCase() + h.slice(1); })(hook(l));
   } },
   pitch: { label: "After they reply", make: function (l) {
     return pick(["That's what most hosts I talk to say 😅", "Makes sense, most hosts I talk to are the same.", "I hear that a lot from hosts in " + placeOf(l) + "."]) +
