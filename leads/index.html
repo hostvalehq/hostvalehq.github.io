@@ -138,6 +138,7 @@ function load() { try { var x = JSON.parse(localStorage.getItem(KEY) || "null");
 function repairPhones() {
   var changed = false;
   Object.keys(S.leads || {}).forEach(function (k) { var l = S.leads[k], f = normPhone(l.phone); if (f && f !== l.phone) { l.phone = f; changed = true; } var mob = /^234[789][01]\d{8}$/.test(l.phone); if (mob !== l.mobile) { l.mobile = mob; changed = true; } if (l.status === "nowa" && l.mobile && !l.nowaChecked) { l.status = l.firstAt ? "messaged" : "new"; l.nowaChecked = true; changed = true; } });
+  Object.keys(S.leads || {}).forEach(function (k) { var l = S.leads[k], sc = score(l); if (sc !== l.score) { l.score = sc; changed = true; } });
   if (changed) { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast("Storage is full. Export a backup in Settings."); } }
@@ -280,7 +281,10 @@ function nextFollow(l) {
 }
 var dueList = function () { return Object.values(S.leads).map(function (l) { return { l: l, f: nextFollow(l) }; }).filter(function (x) { return x.f && x.f.due <= now() + 3600e3; }).sort(function (a, b) { return a.f.due - b.f.due; }); };
 var sentToday = function () { return S.sentLog[dkey()] || 0; };
-function score(l) { return Math.round(Math.min(l.units, 5) * 20 + Math.min(l.reviews || 0, 120) / 4 + ((l.rating || 0) >= 4 ? 10 : 0) + (l.kind === "shortlet" ? 20 : l.kind === "agent" ? 8 : 0) + (l.mobile ? 10 : -20)); }
+// a host with their own website usually already has a system; small hosts on WhatsApp only are the best fit
+var SOCIAL = /(instagram|facebook|fb\.com|tiktok|wa\.me|whatsapp|linktr\.ee|airbnb|booking\.com|x\.com|twitter|google\.com|goo\.gl|business\.site)/i;
+function hasSite(l) { return (l.listings || []).some(function (x) { return x.website && !SOCIAL.test(x.website); }); }
+function score(l) { return Math.round((hasSite(l) ? -30 : 15) + Math.min(l.units, 5) * 20 + Math.min(l.reviews || 0, 120) / 4 + ((l.rating || 0) >= 4 ? 10 : 0) + (l.kind === "shortlet" ? 20 : l.kind === "agent" ? 8 : 0) + (l.mobile ? 10 : -20)); }
 
 /* ============ search ============ */
 var RUN = null;
@@ -368,7 +372,7 @@ function render() {
 function leadCard(l, opts) {
   opts = opts || {}; var sg = stageOf(l.status), f = nextFollow(l);
   return '<div class="lead"><div class="lead-top"><button style="text-align:left;flex:1;min-width:0" data-open="' + l.id + '"><h3>' + esc(l.name) + '</h3><p class="meta">' + esc([l.area, prettyPhone(l.phone)].filter(Boolean).join(" · ")) + '</p></button><div class="score">' + l.score + '<small>score</small></div></div>' +
-    '<div class="tags">' + (sg[0] !== "new" ? '<span class="tag ' + sg[2] + '">' + sg[1] + '</span>' : "") + (l.units > 1 ? '<span class="tag f">' + l.units + ' listings</span>' : "") + (l.kind !== "shortlet" ? '<span class="tag">' + (l.kind === "agent" ? "Property agent" : "Hotel / guest house") + '</span>' : "") + (l.rating ? '<span class="tag">★ ' + l.rating + ' (' + l.reviews + ')</span>' : "") + (!l.mobile ? '<span class="tag r">Landline, may not have WhatsApp</span>' : "") + (opts.due && f ? '<span class="tag a">' + TEMPLATES[f.type].label + '</span>' : "") + '</div>' +
+    '<div class="tags">' + (sg[0] !== "new" ? '<span class="tag ' + sg[2] + '">' + sg[1] + '</span>' : "") + (l.units > 1 ? '<span class="tag f">' + l.units + ' listings</span>' : "") + (hasSite(l) ? '<span class="tag">Has own website</span>' : '<span class="tag g">No website</span>') + (l.kind !== "shortlet" ? '<span class="tag">' + (l.kind === "agent" ? "Property agent" : "Hotel / guest house") + '</span>' : "") + (l.rating ? '<span class="tag">★ ' + l.rating + ' (' + l.reviews + ')</span>' : "") + (!l.mobile ? '<span class="tag r">Landline, may not have WhatsApp</span>' : "") + (opts.due && f ? '<span class="tag a">' + TEMPLATES[f.type].label + '</span>' : "") + '</div>' +
     '<div class="acts"><button class="btn wa sm" data-msg="' + l.id + '" data-type="' + (opts.type || (l.status === "new" ? "opener" : l.status === "replied" ? "pitch" : f ? f.type : "opener")) + '">' + waIc + (opts.btn || (l.status === "new" ? "Message" : l.status === "replied" ? "Send the pitch" : f ? "Send follow-up" : "Message")) + '</button><button class="btn sm" data-open="' + l.id + '">Details</button></div></div>';
 }
 var waIc = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.1.2.6 1.1 1.4 1.8 1 .9 1.8 1.1 2 1.3.3.1.4.1.6-.1l.8-1c.2-.2.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>';
