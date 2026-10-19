@@ -1,5 +1,5 @@
 // Hostvale service worker: instant launch from the phone's copy, quiet background updates, lock-screen notifications
-const C = 'hostvale-v5';
+const C = 'hostvale-v6';
 self.addEventListener('install', (e) => { self.skipWaiting(); e.waitUntil(caches.open(C).then((c) => c.addAll(['/app/', '/manifest.webmanifest?v=2', '/icon-192.png?v=2']).catch(() => {}))); });
 self.addEventListener('activate', (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== C).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', (e) => {
