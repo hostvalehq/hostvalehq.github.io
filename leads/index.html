@@ -204,7 +204,7 @@ var pick = function (a) { return a[Math.floor(Math.random() * a.length)]; };
 function shortName(l) { return String(l.name || "").replace(/\s*[-|–,(].*$/, "").trim() || "your shortlet"; }
 var TEMPLATES = {
   opener: { label: "First message", make: function (l) {
-    return pick([greet() + ", ", "Hi, " + greet().toLowerCase() + ". ", "Hello, "]) + pick(["I saw " + shortName(l) + " on Google Maps 🙂", "I came across " + shortName(l) + " on Google Maps 🙂", "found " + shortName(l) + " on Google Maps 🙂"]) +
+    return pick([greet() + ", ", "Hi, " + greet().toLowerCase() + ". ", "Hello, "]) + pick(["I saw " + shortName(l) + " on Google Maps 🙂", "I came across " + shortName(l) + " on Google Maps 🙂", "I found " + shortName(l) + " on Google Maps 🙂"]) +
       "\n\nI'm " + S.me + ". I built an app for shortlet hosts that " + pick(["blocks double bookings and tracks balances and caution fees", "keeps bookings, balances and caution fees in one place, and stops double bookings"]) + ". " +
       pick(["Can I set it up free for you? Takes me 10 mins", "Would you like me to set it up for you free? Takes about 10 mins", "Can I set it up for you? It's free and takes me 10 mins"]);
   } },
@@ -219,7 +219,7 @@ var TEMPLATES = {
 function waUrl(phone, text) { return "https://wa.me/" + phone + "?text=" + encodeURIComponent(text); }
 
 /* ============ pipeline ============ */
-var STAGES = [["new", "New", ""], ["messaged", "Messaged", "b"], ["replied", "Replied", "f"], ["setup", "Setting up", "a"], ["paying", "Paying", "g"], ["no", "Not interested", "r"]];
+var STAGES = [["new", "New", ""], ["messaged", "Messaged", "b"], ["replied", "Replied", "f"], ["setup", "Setting up", "a"], ["paying", "Paying", "g"], ["no", "Not interested", "r"], ["nowa", "Not on WhatsApp", "r"]];
 var stageOf = function (k) { return STAGES.find(function (s) { return s[0] === k; }) || STAGES[0]; };
 function nextFollow(l) {
   if (l.status !== "messaged" || !l.firstAt) return null;
@@ -243,12 +243,14 @@ function startSearch(skipRepeats) {
   var list = strings();
   if (skipRepeats) { var rep = repeats().map(function (r) { return r[0]; }); list = list.filter(function (x) { return rep.indexOf(x) < 0; }); }
   if (!list.length) { toast("Everything here was searched in the last 14 days"); return; }
-  var places = list.length * S.find.per, cap = Math.round((places * PRICE_PER_PLACE + 0.01) * 100) / 100;
-  var l = left(); if (l != null && cap > l) { toast("Not enough Apify credit for this search. Choose fewer areas."); return; }
+  var places = list.length * S.find.per, est = places * PRICE_PER_PLACE;
+  var l = left(); if (l != null && est > l) { toast("Not enough Apify credit for this search. Choose fewer areas."); return; }
+  // Apify's lowest allowed safety cap is $0.50. The real cost is still limited by the number of places asked for.
+  var cap = Math.max(0.5, Math.round((est + 0.01) * 100) / 100), capQ = l != null && l < 0.5 ? "" : "?maxTotalChargeUsd=" + cap;
   var input = { searchStringsArray: list, maxCrawledPlacesPerSearch: S.find.per, language: "en", countryCode: "ng", scrapePlaceDetailPage: false, scrapeContacts: false, maxImages: 0, maxReviews: 0, maxQuestions: 0, includeWebResults: false };
   RUN = { cancelled: false, started: now(), list: list }; render();
   // maxTotalChargeUsd is a hard spending cap enforced by Apify itself
-  api("/acts/" + ACTOR + "/runs?maxTotalChargeUsd=" + cap, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input) })
+  api("/acts/" + ACTOR + "/runs" + capQ, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input) })
     .then(function (r) { RUN.id = r.data.id; RUN.ds = r.data.defaultDatasetId; return poll(0); })
     .then(function () { return api("/datasets/" + RUN.ds + "/items?clean=true&format=json"); })
     .then(function (items) { var res = processItems(items || [], list); S.searches.unshift({ at: now(), strings: list, scanned: (items || []).length, added: res.added, merged: res.merged }); S.searches = S.searches.slice(0, 60); save(); RUN = null; lastResult = res; render(); refreshCredit(); })
@@ -276,11 +278,12 @@ function cancelSearch() { if (!RUN) return; RUN.cancelled = true; if (RUN.id) ap
 
 // group places by phone number: one host often lists several apartments
 function processItems(items, list) {
-  var st = { scanned: items.length, closed: 0, nophone: 0, notShortlet: 0, added: 0, merged: 0, known: 0 }, touched = {};
+  var st = { scanned: items.length, closed: 0, nophone: 0, landline: 0, notShortlet: 0, added: 0, merged: 0, known: 0 }, touched = {};
   items.forEach(function (p) {
     if (p.permanentlyClosed || p.temporarilyClosed) { st.closed++; return; }
     var phone = normPhone(p.phoneUnformatted || p.phone);
     if (!phone || phone.length < 12) { st.nophone++; return; }
+    if (!isMobile(phone)) { st.landline++; return; } // landlines can't use WhatsApp
     var kind = kindOf(p);
     if (kind === "other") { st.notShortlet++; return; }
     var pid = String(p.placeId || p.cid || (p.title + "|" + p.address));
@@ -335,7 +338,7 @@ function viewToday() {
 
 function viewFind() {
   var f = S.find, e = estimate(), rep = repeats(), l = left();
-  var h = '<h1>Find shortlet hosts</h1><p class="sub">Searches Google Maps through your Apify account. You only pay for places found, and never more than the cap shown.</p>';
+  var h = '<h1>Find shortlet hosts</h1><p class="sub">Searches Google Maps through your Apify account. You only pay for places found, never more than the price shown. Only mobile numbers are kept, because landlines cannot use WhatsApp.</p>';
   if (RUN) {
     return h + '<div class="card"><b>Searching ' + RUN.list.length + ' area' + (RUN.list.length > 1 ? "s" : "") + '…</b><p class="muted small" id="runTime">Starting</p><div class="progress"><span></span></div><p class="muted small" style="margin-top:10px">Usually 1 to 3 minutes. You can leave this page open.</p><button class="btn block red" style="margin-top:12px" data-act="cancel">Cancel search</button></div>';
   }
@@ -356,7 +359,7 @@ function viewFind() {
 function resultBox(r) {
   if (r.error) return '<div class="err">' + esc(r.error) + (r.runId ? ' <a href="https://console.apify.com/actors/runs/' + encodeURIComponent(r.runId) + '" target="_blank" rel="noopener" style="text-decoration:underline">Open in Apify</a>' : "") + '</div>';
   return '<div class="ok"><b>' + r.added + ' new host' + (r.added === 1 ? "" : "s") + ' found</b> from ' + r.scanned + ' places.' + (r.known ? " " + r.known + " you already had." : "") + (r.merged ? " " + (r.merged === 1 ? "1 extra listing was matched to a host with several apartments." : r.merged + " extra listings were matched to hosts with several apartments.") : "") +
-    '<br><span class="small">Skipped: ' + r.notShortlet + ' not shortlets, ' + r.nophone + ' without a phone, ' + r.closed + ' closed.</span>' + (r.added ? '<div style="margin-top:10px"><button class="btn sm" data-go="today">Start messaging</button></div>' : "") + '</div>';
+    '<br><span class="small">Skipped: ' + r.notShortlet + ' not shortlets, ' + r.nophone + ' without a phone, ' + (r.landline || 0) + ' landlines (no WhatsApp), ' + r.closed + ' closed.</span>' + (r.added ? '<div style="margin-top:10px"><button class="btn sm" data-go="today">Start messaging</button></div>' : "") + '</div>';
 }
 function updateRunTime() { var el = $("#runTime"); if (el && RUN) el.textContent = Math.round((now() - RUN.started) / 1000) + "s · " + (RUN.status ? RUN.status.toLowerCase().replace("_", " ") : "starting"); }
 setInterval(updateRunTime, 1000);
@@ -414,7 +417,7 @@ function openMessage(id, type) {
     '<textarea class="inp" id="msgText" style="margin-top:12px">' + esc(t.make(l)) + '</textarea>' +
     (type === "sample" && !l.sample ? '<div class="warn">Add the sample booking page link in this host\'s details first, or paste it into the message.</div>' : "") +
     (over ? '<div class="warn">You have already messaged ' + S.dailyCap + ' new hosts today. Sending more risks your WhatsApp number. Better to continue tomorrow.</div>' : "") +
-    '<div style="display:grid;gap:8px;margin-top:12px"><button class="btn wa block" data-act="send" data-id="' + l.id + '" data-type="' + type + '">' + waIc + 'Open WhatsApp</button><button class="btn block" data-act="reroll" data-id="' + l.id + '" data-type="' + type + '">Word it differently</button></div>');
+    '<div style="display:grid;gap:8px;margin-top:12px"><button class="btn wa block" data-act="send" data-id="' + l.id + '" data-type="' + type + '">' + waIc + 'Open WhatsApp</button><button class="btn block" data-act="reroll" data-id="' + l.id + '" data-type="' + type + '">Word it differently</button><button class="btn block red" data-act="nowa" data-id="' + l.id + '">WhatsApp says this number is not on WhatsApp</button></div>');
 }
 function markSent(l, type) {
   var wasNew = l.status === "new";
@@ -445,6 +448,12 @@ document.addEventListener("click", function (e) {
   if (act === "cancel") return cancelSearch();
   if (act === "reroll") return openMessage(d.id, d.type);
   if (act === "send") { var l = S.leads[d.id], txt = $("#msgText").value; markSent(l, d.type); window.open(waUrl(l.phone, txt), "_blank"); closeSheet(); render(); toast("Marked as sent. Follow-up reminders are set."); return; }
+  if (act === "nowa") {
+    var n = S.leads[d.id];
+    // give back today's message if it was counted and never reached them
+    if (n.firstAt && dkey(n.firstAt) === dkey() && (n.touches || []).length <= 1) S.sentLog[dkey()] = Math.max(0, sentToday() - 1);
+    n.status = "nowa"; save(); closeSheet(); render(); toast("Moved to Not on WhatsApp. It won't show up again."); return;
+  }
   if (act === "delete") { if (confirm("Delete this host?")) { delete S.leads[d.id]; save(); closeSheet(); render(); } return; }
   if (act === "token") {
     var tk = $("#token").value.trim(); if (!tk) return toast("Paste your token first");
