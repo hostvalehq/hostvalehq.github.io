@@ -220,7 +220,13 @@ function shortName(l) {
   var full = String(l.name || "").trim();
   var clean = function (x) { return x.replace(/\b(short[\s-]?lets?|apartments?|apts?|serviced)\b/gi, " ").replace(/\bin\s+[A-Za-z]+(\s+(phase\s*1|island|gra|[A-Za-z]+))?\s*$/i, " ").replace(/\s{2,}/g, " ").trim(); };
   var segs = full.split(/\s[-|–]\s?|[-|–]\s|[,(]/).map(function (x) { return x.trim(); }).filter(Boolean);
-  for (var i = 0; i < segs.length; i++) { var c = clean(segs[i]); if (c.length >= 3 && !/^(n|₦)?\d/i.test(c)) return c; }
+  for (var i = 0; i < segs.length; i++) {
+    var c = clean(segs[i]), orig = segs[i].replace(/\s{2,}/g, " ").trim();
+    if (c.length < 3 || /^(n|₦)?\d/i.test(c)) continue;
+    // "Book Shortlet" must not become "Book": keep short names whole
+    if (c.split(" ").length < 2 && orig.split(" ").length <= 3) return orig;
+    return c;
+  }
   return full || "your shortlet";
 }
 // Messages are written fresh every time you open one, so improving them here updates every saved lead.
