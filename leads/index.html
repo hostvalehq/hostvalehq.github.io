@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0E1116">
+<meta name="color-scheme" content="dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://api.apify.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Hostvale Leads</title>
+<link rel="icon" href="/icon.svg?v=2">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0E1116;--surf:#161A21;--surf2:#1C2129;--line:#262B34;--gold:#D9BC85;--gold2:#E9CF9B;--ivory:#F3EDE2;--mist:#9AA0AA;--dim:#6C727D;--mint:#6FCFA4;--coral:#F08C7A;--blue:#8EB3F0;--amber:#E8B866}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--ink);color:var(--ivory)}
+body{font:500 15px/1.5 Manrope,-apple-system,system-ui,sans-serif;min-height:100vh;padding-bottom:calc(86px + env(safe-area-inset-bottom))}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+.serif{font-family:Fraunces,Georgia,serif;letter-spacing:-.02em}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+header{position:sticky;top:0;z-index:20;background:rgba(14,17,22,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid #1D2129;padding-top:env(safe-area-inset-top)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:10px}
+.brand{display:flex;align-items:center;gap:10px;font:500 20px Fraunces,Georgia,serif}
+.brand img{width:30px;height:30px;border-radius:9px}
+.brand small{font:700 12px Manrope,sans-serif;color:var(--gold);background:#1D1A12;border:1px solid #3A3222;padding:3px 8px;border-radius:999px}
+.credit{font-size:12.5px;color:var(--mist);text-align:right;line-height:1.3}
+.credit b{color:var(--ivory);display:block;font-size:14px}
+h1{font:400 32px/1.08 Fraunces,Georgia,serif;letter-spacing:-.03em;margin:22px 0 6px}
+.sub{color:var(--mist);font-size:14.5px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:20px;padding:16px;margin-top:12px}
+.lbl{display:block;font-size:13px;font-weight:700;color:#C9CDD4;margin:14px 0 8px}
+.lbl:first-child{margin-top:0}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{padding:8px 13px;border-radius:999px;border:1px solid #2E343E;background:#12151B;font-size:13.5px;font-weight:600;color:#C9CDD4;transition:background .15s,border-color .15s}
+.chip.on{background:#2A2418;border-color:var(--gold);color:var(--gold2)}
+.chip .n{margin-left:6px;color:var(--dim);font-weight:700}
+.chip.on .n{color:var(--gold)}
+.inp{width:100%;background:#0F1217;border:1px solid #2A303B;border-radius:13px;padding:12px 13px;font-size:15px;outline:none}
+.inp:focus{border-color:var(--gold)}
+textarea.inp{min-height:150px;line-height:1.5;resize:vertical}
+.row{display:flex;gap:8px;align-items:center}
+.row>*{min-width:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:14px;background:var(--surf2);border:1px solid #2E343E;font-weight:700;font-size:14.5px;white-space:nowrap}
+.btn.pri{background:linear-gradient(160deg,#E9CF9B,#C09A5B);color:#17140D;border:0;box-shadow:0 10px 24px -12px rgba(217,188,133,.7)}
+.btn.wa{background:#163626;border-color:#22543A;color:#9FE6C1}
+.btn.red{color:#F6A596}
+.btn.block{width:100%}
+.btn.sm{padding:8px 12px;font-size:13px;border-radius:11px}
+.btn:disabled{opacity:.45}
+.cost{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:13px 14px;border-radius:14px;background:#12151B;border:1px dashed #3A3222;margin-top:14px}
+.cost b{font:500 22px Fraunces,Georgia,serif;color:var(--gold2)}
+.cost span{color:var(--mist);font-size:13px}
+.warn{background:#231A12;border:1px solid #4A3420;color:#F0C796;border-radius:14px;padding:12px 14px;font-size:13.5px;margin-top:12px}
+.ok{background:#12251C;border:1px solid #1F4A33;color:#A9E8C8;border-radius:14px;padding:12px 14px;font-size:13.5px;margin-top:12px}
+.err{background:#2A1614;border:1px solid #5A2A24;color:#F6A596;border-radius:14px;padding:12px 14px;font-size:13.5px;margin-top:12px}
+.muted{color:var(--mist)}
+.small{font-size:12.5px}
+.range{width:100%;accent-color:var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.stat{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:12px}
+.stat b{display:block;font:500 24px Fraunces,Georgia,serif}
+.stat span{font-size:12px;color:var(--mist)}
+.lead{background:var(--surf);border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:10px}
+.lead-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.lead h3{font-size:15.5px;line-height:1.3}
+.lead .meta{color:var(--mist);font-size:13px;margin-top:3px}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.tag{font-size:11.5px;font-weight:800;padding:3px 8px;border-radius:999px;background:#20252E;color:#C9CDD4}
+.tag.g{background:#15301F;color:#8FE0BA}.tag.f{background:#2A2418;color:var(--gold2)}.tag.b{background:#16233A;color:var(--blue)}.tag.r{background:#2E1A18;color:#F6A596}.tag.a{background:#2B2213;color:var(--amber)}
+.score{font:500 20px Fraunces,Georgia,serif;color:var(--gold2);text-align:right;line-height:1}
+.score small{display:block;font:700 10.5px Manrope,sans-serif;color:var(--dim);margin-top:3px}
+.acts{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(18,21,27,.97);border-top:1px solid #232831;padding-bottom:env(safe-area-inset-bottom);display:flex}
+.tabs button{flex:1;padding:10px 4px 9px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;font-weight:700;color:var(--dim);position:relative}
+.tabs button.on{color:var(--gold2)}
+.tabs svg{width:22px;height:22px}
+.tabs .badge{position:absolute;top:5px;left:calc(50% + 6px);background:var(--coral);color:#1A0E0C;font-size:10.5px;font-weight:800;border-radius:999px;padding:1px 6px}
+.sheet{position:fixed;inset:0;z-index:50;background:rgba(5,7,10,.66);display:flex;align-items:flex-end;justify-content:center;animation:fade .18s ease}
+.panel{background:#12151B;border:1px solid #262B34;border-bottom:0;border-radius:24px 24px 0 0;width:100%;max-width:720px;max-height:92vh;overflow-y:auto;padding:18px 16px calc(20px + env(safe-area-inset-bottom));animation:up .28s cubic-bezier(.2,1,.3,1)}
+.panel-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:10px}
+.panel-h h2{font:500 22px Fraunces,Georgia,serif;letter-spacing:-.02em}
+.x{width:38px;height:38px;border-radius:12px;border:1px solid #2A303B;display:flex;align-items:center;justify-content:center;color:#C9CDD4;flex:none}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.progress{height:6px;border-radius:9px;background:#232831;overflow:hidden;margin-top:12px}
+.progress span{display:block;height:100%;width:30%;border-radius:9px;background:linear-gradient(90deg,#B8904F,#E9CF9B);animation:slide 1.4s ease-in-out infinite}
+@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(340%)}}
+.list-empty{text-align:center;color:var(--mist);padding:40px 16px}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#F3EDE2;color:#0E1116;padding:11px 16px;border-radius:14px;font-weight:700;font-size:14px;z-index:60;box-shadow:0 14px 30px -12px rgba(0,0,0,.6);max-width:90vw;text-align:center;animation:up .25s ease}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.kv div{background:#0F1217;border:1px solid #232831;border-radius:12px;padding:10px}
+.kv span{display:block;font-size:11.5px;color:var(--dim);font-weight:700}
+.kv b{font-size:14px;overflow-wrap:anywhere}
+.listing{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #20252E;font-size:13.5px}
+.listing:last-child{border-bottom:0}
+.hist{font-size:12.5px;color:var(--mist);padding:6px 0;border-bottom:1px solid #1D2129}
+.seg{display:flex;background:#0F1217;border:1px solid #2A303B;border-radius:13px;padding:4px;gap:4px;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:1;padding:9px 10px;border-radius:10px;font-size:13px;font-weight:700;color:var(--mist);white-space:nowrap}
+.seg button.on{background:var(--ivory);color:var(--ink)}
+.search{position:relative}
+.search input{padding-left:38px}
+.search svg{position:absolute;left:12px;top:13px;color:var(--dim)}
+.hide{display:none!important}
+.goal{display:flex;align-items:center;gap:12px}
+.ring{width:54px;height:54px;flex:none}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="brand"><img src="/icon-192.png?v=2" alt="">Leads<small>Hostvale</small></div>
+  <button class="credit" id="creditBtn" aria-label="Apify credit"><span id="creditTxt">No Apify token</span></button>
+</div></header>
+
+<main class="wrap" id="main"></main>
+
+<nav class="tabs" aria-label="Sections">
+  <button data-tab="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Today<span class="badge hide" id="dueBadge"></span></button>
+  <button data-tab="find"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>Find</button>
+  <button data-tab="leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Leads</button>
+  <button data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</button>
+</nav>
+
+<script>
+"use strict";
+/* ============ storage (this phone only) ============ */
+var KEY = "hvl_v1";
+var DEF = { token: "", acct: null, me: "Musty", dailyCap: 15, leads: {}, searches: [], sentLog: {}, tab: "today", find: { city: "Lagos", areas: ["Lekki Phase 1"], terms: ["shortlet apartment"], per: 20 } };
+var S = load();
+function load() { try { var x = JSON.parse(localStorage.getItem(KEY) || "null"); return x ? Object.assign({}, DEF, x, { find: Object.assign({}, DEF.find, x.find || {}) }) : JSON.parse(JSON.stringify(DEF)); } catch (e) { return JSON.parse(JSON.stringify(DEF)); } }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast("Storage is full. Export a backup in Settings."); } }
+
+/* ============ places ============ */
+var CITIES = {
+  "Lagos": ["Lekki Phase 1", "Victoria Island", "Ikoyi", "Oniru", "Ikate", "Chevron", "Ajah", "Sangotedo", "Osapa London", "Agungi", "Ikeja GRA", "Yaba", "Surulere", "Magodo", "Gbagada", "Banana Island", "Eko Atlantic"],
+  "Abuja": ["Wuse 2", "Maitama", "Asokoro", "Jabi", "Gwarinpa", "Garki", "Utako", "Katampe", "Guzape", "Life Camp"],
+  "Port Harcourt": ["GRA Phase 2", "Old GRA", "Trans Amadi", "Peter Odili Road", "Rumuola"],
+  "Ibadan": ["Bodija", "Jericho", "Oluyole", "Iyaganku GRA"]
+};
+var TERMS = ["shortlet apartment", "serviced apartment", "short let", "apartment hotel", "holiday apartment"];
+var PRICE_PER_PLACE = 0.004; // compass~crawler-google-places, free plan: $4 per 1,000 places
+var ACTOR = "compass~crawler-google-places", API = "https://api.apify.com/v2";
+
+/* ============ helpers ============ */
+var $ = function (s, r) { return (r || document).querySelector(s); };
+var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+var DAY = 864e5;
+var now = function () { return Date.now(); };
+var dkey = function (t) { var d = new Date(t || now()); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); };
+var ago = function (t) { var d = Math.floor((now() - t) / DAY); return d <= 0 ? "today" : d === 1 ? "yesterday" : d + " days ago"; };
+var money = function (n) { return "$" + (Math.round(n * 100) / 100).toFixed(2); };
+function toast(m) { var t = document.createElement("div"); t.className = "toast"; t.textContent = m; document.body.appendChild(t); setTimeout(function () { t.remove(); }, 2400); }
+
+// Nigerian numbers -> 234XXXXXXXXXX. Mobile numbers start 70/80/81/90/91 after 234.
+function normPhone(p) {
+  var d = String(p || "").replace(/\D/g, "");
+  if (d.indexOf("00234") === 0) d = d.slice(2);
+  if (d.indexOf("234") === 0) { /* already international */ }
+  else if (d.length === 11 && d[0] === "0") d = "234" + d.slice(1);
+  else if (d.length === 10 && /^[789]/.test(d)) d = "234" + d;
+  return d;
+}
+var isMobile = function (d) { return /^234[789][01]\d{8}$/.test(d); };
+var prettyPhone = function (d) { return d && d.indexOf("234") === 0 ? "0" + d.slice(3, 6) + " " + d.slice(6, 9) + " " + d.slice(9) : d; };
+
+// what kind of place is this? Only shortlets (and maybe agents/small hotels) are worth contacting.
+function kindOf(p) {
+  var cats = [p.categoryName].concat(p.categories || []).join(" ").toLowerCase();
+  var all = (cats + " " + (p.title || "")).toLowerCase();
+  if (/short ?let|serviced|apartment|vacation|holiday home|holiday apartment|airbnb|suites?\b|residence|homes?\b|flat|duplex|condo|villa|lodging/.test(all) && !/school|church|hospital|restaurant|bank\b|pharmacy|salon|gym/.test(cats)) return "shortlet";
+  if (/real estate|property|realtor|estate agent|letting/.test(all)) return "agent";
+  if (/hotel|guest ?house|inn\b|motel|lodge|hostel/.test(all)) return "hotel";
+  return "other";
+}
+
+/* ============ Apify ============ */
+function api(path, opt, token) {
+  opt = opt || {};
+  var url = API + path + (path.indexOf("?") > -1 ? "&" : "?") + "token=" + encodeURIComponent(token || S.token);
+  return fetch(url, opt).then(function (r) { return r.text().then(function (t) { var j = null; try { j = t ? JSON.parse(t) : null; } catch (e) {} if (!r.ok) { var e2 = new Error((j && j.error && j.error.message) || ("Apify error " + r.status)); e2.status = r.status; throw e2; } return j; }); });
+}
+function checkAccount(token) {
+  return api("/users/me", {}, token).then(function (r) {
+    var d = r.data || {}, info = { user: d.username || d.email || "Apify account", at: now(), limit: null, used: null };
+    return api("/users/me/limits", {}, token).then(function (l) { var x = l.data || {}; info.limit = x.limits && x.limits.maxMonthlyUsageUsd; info.used = x.current && x.current.monthlyUsageUsd; return info; }, function () { return info; });
+  });
+}
+var left = function () { return S.acct && S.acct.limit != null && S.acct.used != null ? Math.max(0, S.acct.limit - S.acct.used) : null; };
+function renderCredit() {
+  var l = left();
+  $("#creditTxt").innerHTML = !S.token ? "Add Apify token" : l == null ? "Apify connected" : "<b>" + money(l) + " left</b>about " + Math.floor(l / PRICE_PER_PLACE).toLocaleString() + " places";
+}
+
+/* ============ messages ============ */
+function greet() { var h = new Date().getHours(); return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening"; }
+var pick = function (a) { return a[Math.floor(Math.random() * a.length)]; };
+function shortName(l) { return String(l.name || "").replace(/\s*[-|–,(].*$/, "").trim() || "your shortlet"; }
+var TEMPLATES = {
+  opener: { label: "First message", make: function (l) {
+    return pick([greet() + ", ", "Hi, " + greet().toLowerCase() + ". ", "Hello, "]) + pick(["I saw " + shortName(l) + " on Google Maps 🙂", "I came across " + shortName(l) + " on Google Maps 🙂", "found " + shortName(l) + " on Google Maps 🙂"]) +
+      "\n\nI'm " + S.me + ". I built an app for shortlet hosts that " + pick(["blocks double bookings and tracks balances and caution fees", "keeps bookings, balances and caution fees in one place, and stops double bookings"]) + ". " +
+      pick(["Can I set it up free for you? Takes me 10 mins", "Would you like me to set it up for you free? Takes about 10 mins", "Can I set it up for you? It's free and takes me 10 mins"]);
+  } },
+  sample: { label: "I made this for you", make: function (l) {
+    return pick(["Hi, ", greet() + ", "]) + "I'm " + S.me + ". " + pick(["I made a sample booking page for " + shortName(l) + " 👀", "I put together a booking page for " + shortName(l) + " as a sample 👀"]) + "\n" + (l.sample || "[paste the booking page link]") +
+      "\n\nGuests see free dates and prices and send a request straight to you. " + pick(["Want me to hand it over? It's free", "Should I hand it over to you? It's free", "Want it? It's yours, free"]);
+  } },
+  follow3: { label: "Follow-up (day 3)", make: function () { return pick(["Hey, did you get a chance to check my message? Happy to set it up for you, no stress", "Hi again 🙂 just checking you saw my message. I can set it up for you anytime", "Hello, just following up. Happy to set it up free for you whenever you're ready"]); } },
+  follow7: { label: "Last follow-up (day 7)", make: function () { return pick(["Last one from me 🙏 if bookings ever get messy, the offer stands. hostvalehq.github.io", "No wahala if now isn't a good time 🙏 the offer stands whenever you need it: hostvalehq.github.io"]); } },
+  convert: { label: "Free month ending", make: function () { return "How's Hostvale going? Your free month ends soon. You're one of my first 10 hosts so it's ₦3,000/month instead of ₦5,000, locked forever. Should I keep you on Pro?"; } }
+};
+function waUrl(phone, text) { return "https://wa.me/" + phone + "?text=" + encodeURIComponent(text); }
+
+/* ============ pipeline ============ */
+var STAGES = [["new", "New", ""], ["messaged", "Messaged", "b"], ["replied", "Replied", "f"], ["setup", "Setting up", "a"], ["paying", "Paying", "g"], ["no", "Not interested", "r"]];
+var stageOf = function (k) { return STAGES.find(function (s) { return s[0] === k; }) || STAGES[0]; };
+function nextFollow(l) {
+  if (l.status !== "messaged" || !l.firstAt) return null;
+  var sent = (l.touches || []).map(function (t) { return t.type; });
+  if (sent.indexOf("follow3") < 0) return { type: "follow3", due: l.firstAt + 3 * DAY };
+  if (sent.indexOf("follow7") < 0) return { type: "follow7", due: l.firstAt + 7 * DAY };
+  return null;
+}
+var dueList = function () { return Object.values(S.leads).map(function (l) { return { l: l, f: nextFollow(l) }; }).filter(function (x) { return x.f && x.f.due <= now() + 3600e3; }).sort(function (a, b) { return a.f.due - b.f.due; }); };
+var sentToday = function () { return S.sentLog[dkey()] || 0; };
+function score(l) { return Math.round(Math.min(l.units, 5) * 20 + Math.min(l.reviews || 0, 120) / 4 + ((l.rating || 0) >= 4 ? 10 : 0) + (l.kind === "shortlet" ? 20 : l.kind === "agent" ? 8 : 0) + (l.mobile ? 10 : -20)); }
+
+/* ============ search ============ */
+var RUN = null;
+function strings() { var f = S.find, out = []; f.terms.forEach(function (t) { f.areas.forEach(function (a) { out.push(t + " in " + a + ", " + f.city); }); }); return out; }
+function estimate() { var n = strings().length * S.find.per; return { strings: strings().length, places: n, cost: n * PRICE_PER_PLACE }; }
+function repeats() { var lim = now() - 14 * DAY, set = {}; S.searches.forEach(function (s) { if (s.at > lim) (s.strings || []).forEach(function (x) { set[x.toLowerCase()] = s.at; }); }); return strings().filter(function (x) { return set[x.toLowerCase()]; }).map(function (x) { return [x, set[x.toLowerCase()]]; }); }
+
+function startSearch(skipRepeats) {
+  if (!S.token) { go("settings"); toast("Add your Apify token first"); return; }
+  var list = strings();
+  if (skipRepeats) { var rep = repeats().map(function (r) { return r[0]; }); list = list.filter(function (x) { return rep.indexOf(x) < 0; }); }
+  if (!list.length) { toast("Everything here was searched in the last 14 days"); return; }
+  var places = list.length * S.find.per, cap = Math.round((places * PRICE_PER_PLACE + 0.01) * 100) / 100;
+  var l = left(); if (l != null && cap > l) { toast("Not enough Apify credit for this search. Choose fewer areas."); return; }
+  var input = { searchStringsArray: list, maxCrawledPlacesPerSearch: S.find.per, language: "en", countryCode: "ng", scrapePlaceDetailPage: false, scrapeContacts: false, maxImages: 0, maxReviews: 0, maxQuestions: 0, includeWebResults: false };
+  RUN = { cancelled: false, started: now(), list: list }; render();
+  // maxTotalChargeUsd is a hard spending cap enforced by Apify itself
+  api("/acts/" + ACTOR + "/runs?maxTotalChargeUsd=" + cap, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input) })
+    .then(function (r) { RUN.id = r.data.id; RUN.ds = r.data.defaultDatasetId; return poll(0); })
+    .then(function () { return api("/datasets/" + RUN.ds + "/items?clean=true&format=json"); })
+    .then(function (items) { var res = processItems(items || [], list); S.searches.unshift({ at: now(), strings: list, scanned: (items || []).length, added: res.added, merged: res.merged }); S.searches = S.searches.slice(0, 60); save(); RUN = null; lastResult = res; render(); refreshCredit(); })
+    .catch(function (e) {
+      var m = e.message || "Search failed.";
+      if (e.status === 401) m = "Apify rejected the token. Check it in Settings.";
+      else if (e.status === 402 || /usage|credit|limit|exceed/i.test(m)) m = "Your Apify account is out of credit for this month.";
+      else if (/fetch|network|load failed/i.test(m)) m = "No connection. Check your internet and try again.";
+      var id = RUN && RUN.id; RUN = null; lastResult = { error: m, runId: id }; render();
+    });
+}
+function poll(n) {
+  return new Promise(function (r) { setTimeout(r, 3000); }).then(function () {
+    if (!RUN || RUN.cancelled) throw new Error("Search cancelled.");
+    return api("/actor-runs/" + RUN.id);
+  }).then(function (r) {
+    var st = r.data.status; if (RUN) RUN.status = st; updateRunTime();
+    if (st === "SUCCEEDED") return;
+    if (/FAILED|ABORTED|TIMED/.test(st)) throw new Error("The search stopped on Apify (" + st.toLowerCase().replace("_", " ") + ").");
+    if (n > 200) throw new Error("The search is taking too long. Try fewer areas.");
+    return poll(n + 1);
+  });
+}
+function cancelSearch() { if (!RUN) return; RUN.cancelled = true; if (RUN.id) api("/actor-runs/" + RUN.id + "/abort", { method: "POST" }).catch(function () {}); }
+
+// group places by phone number: one host often lists several apartments
+function processItems(items, list) {
+  var st = { scanned: items.length, closed: 0, nophone: 0, notShortlet: 0, added: 0, merged: 0, known: 0 }, touched = {};
+  items.forEach(function (p) {
+    if (p.permanentlyClosed || p.temporarilyClosed) { st.closed++; return; }
+    var phone = normPhone(p.phoneUnformatted || p.phone);
+    if (!phone || phone.length < 12) { st.nophone++; return; }
+    var kind = kindOf(p);
+    if (kind === "other") { st.notShortlet++; return; }
+    var pid = String(p.placeId || p.cid || (p.title + "|" + p.address));
+    var area = p.neighborhood || (p.address || "").split(",").slice(-3, -2)[0] || "";
+    var listing = { pid: pid, name: p.title || "Unnamed", address: p.address || "", area: String(area).trim(), maps: p.url || "", rating: +(p.totalScore || 0), reviews: +(p.reviewsCount || 0), category: p.categoryName || "", website: p.website || "" };
+    var l = S.leads[phone];
+    if (!l) { l = S.leads[phone] = { id: phone, phone: phone, mobile: isMobile(phone), name: listing.name, kind: kind, listings: [], status: "new", found: now(), touches: [], notes: "" }; st.added++; touched[phone] = 1; }
+    else if (!touched[phone]) { st.known++; touched[phone] = 1; }
+    if (!l.listings.some(function (x) { return x.pid === pid; })) { l.listings.push(listing); if (l.listings.length > 1) st.merged++; }
+    if (kind === "shortlet") l.kind = "shortlet";
+    l.units = l.listings.length;
+    l.reviews = l.listings.reduce(function (s, x) { return s + x.reviews; }, 0);
+    var rated = l.listings.filter(function (x) { return x.rating; }); l.rating = rated.length ? Math.round(rated.reduce(function (s, x) { return s + x.rating; }, 0) / rated.length * 10) / 10 : 0;
+    l.area = l.listings.map(function (x) { return x.area; }).filter(Boolean)[0] || "";
+    l.score = score(l);
+  });
+  save();
+  return st;
+}
+function refreshCredit() { if (!S.token) return; checkAccount(S.token).then(function (i) { S.acct = i; save(); renderCredit(); }).catch(function () {}); }
+
+/* ============ views ============ */
+var lastResult = null, leadFilter = { stage: "new", kind: "all", q: "" };
+function go(t) { S.tab = t; save(); render(); window.scrollTo(0, 0); }
+function render() {
+  document.querySelectorAll(".tabs button").forEach(function (b) { b.classList.toggle("on", b.dataset.tab === S.tab); });
+  var due = dueList().length; var bd = $("#dueBadge"); bd.textContent = due; bd.classList.toggle("hide", !due);
+  renderCredit();
+  $("#main").innerHTML = ({ today: viewToday, find: viewFind, leads: viewLeads, settings: viewSettings })[S.tab]();
+}
+
+function leadCard(l, opts) {
+  opts = opts || {}; var sg = stageOf(l.status), f = nextFollow(l);
+  return '<div class="lead"><div class="lead-top"><button style="text-align:left;flex:1;min-width:0" data-open="' + l.id + '"><h3>' + esc(l.name) + '</h3><p class="meta">' + esc([l.area, prettyPhone(l.phone)].filter(Boolean).join(" · ")) + '</p></button><div class="score">' + l.score + '<small>score</small></div></div>' +
+    '<div class="tags">' + (sg[0] !== "new" ? '<span class="tag ' + sg[2] + '">' + sg[1] + '</span>' : "") + (l.units > 1 ? '<span class="tag f">' + l.units + ' listings</span>' : "") + (l.kind !== "shortlet" ? '<span class="tag">' + (l.kind === "agent" ? "Property agent" : "Hotel / guest house") + '</span>' : "") + (l.rating ? '<span class="tag">★ ' + l.rating + ' (' + l.reviews + ')</span>' : "") + (!l.mobile ? '<span class="tag r">Landline, may not have WhatsApp</span>' : "") + (opts.due && f ? '<span class="tag a">' + TEMPLATES[f.type].label + '</span>' : "") + '</div>' +
+    '<div class="acts"><button class="btn wa sm" data-msg="' + l.id + '" data-type="' + (opts.type || (l.status === "new" ? "opener" : f ? f.type : "opener")) + '">' + waIc + (opts.btn || (l.status === "new" ? "Message" : f ? "Send follow-up" : "Message")) + '</button><button class="btn sm" data-open="' + l.id + '">Details</button></div></div>';
+}
+var waIc = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.1.2.6 1.1 1.4 1.8 1 .9 1.8 1.1 2 1.3.3.1.4.1.6-.1l.8-1c.2-.2.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>';
+
+function viewToday() {
+  var all = Object.values(S.leads), due = dueList(), sent = sentToday(), cap = S.dailyCap;
+  var next = all.filter(function (l) { return l.status === "new"; }).sort(function (a, b) { return b.score - a.score; }).slice(0, Math.max(0, cap - sent));
+  var counts = {}; STAGES.forEach(function (s) { counts[s[0]] = 0; }); all.forEach(function (l) { counts[l.status] = (counts[l.status] || 0) + 1; });
+  var setUp = counts.setup + counts.paying, pct = Math.min(1, setUp / 10), C = 2 * Math.PI * 22;
+  var h = '<h1>' + (sent >= cap ? "Today's messages are done." : due.length ? due.length + " follow-up" + (due.length > 1 ? "s" : "") + " due." : all.length ? "Who to message today." : "Find your first hosts.") + '</h1><p class="sub">' + sent + ' of ' + cap + ' new hosts messaged today. Keeping it under ' + cap + ' a day protects your WhatsApp number.</p>';
+  h += '<div class="card goal"><svg class="ring" viewBox="0 0 54 54"><circle cx="27" cy="27" r="22" fill="none" stroke="#262B34" stroke-width="6"/><circle cx="27" cy="27" r="22" fill="none" stroke="#D9BC85" stroke-width="6" stroke-linecap="round" stroke-dasharray="' + (C * pct) + ' ' + C + '" transform="rotate(-90 27 27)"/></svg><div><b>' + setUp + ' of 10 hosts set up</b><p class="muted small">' + counts.messaged + ' messaged · ' + counts.replied + ' replied · ' + counts.paying + ' paying</p></div></div>';
+  if (!all.length) return h + '<div class="card"><p>Search Google Maps for shortlet hosts in the areas you choose. Each host comes with a WhatsApp number and a ready message.</p><button class="btn pri block" style="margin-top:14px" data-go="find">Find hosts</button></div>';
+  if (due.length) h += '<p class="lbl" style="margin-top:22px">Follow-ups due</p>' + due.map(function (x) { return leadCard(x.l, { due: true }); }).join("");
+  if (sent < cap) h += '<p class="lbl" style="margin-top:22px">Message next (best first)</p>' + (next.length ? next.map(function (l) { return leadCard(l); }).join("") : '<div class="card muted">No new hosts left. <button class="btn sm" data-go="find" style="margin-left:6px">Find more</button></div>');
+  return h;
+}
+
+function viewFind() {
+  var f = S.find, e = estimate(), rep = repeats(), l = left();
+  var h = '<h1>Find shortlet hosts</h1><p class="sub">Searches Google Maps through your Apify account. You only pay for places found, and never more than the cap shown.</p>';
+  if (RUN) {
+    return h + '<div class="card"><b>Searching ' + RUN.list.length + ' area' + (RUN.list.length > 1 ? "s" : "") + '…</b><p class="muted small" id="runTime">Starting</p><div class="progress"><span></span></div><p class="muted small" style="margin-top:10px">Usually 1 to 3 minutes. You can leave this page open.</p><button class="btn block red" style="margin-top:12px" data-act="cancel">Cancel search</button></div>';
+  }
+  if (lastResult) h += resultBox(lastResult);
+  h += '<div class="card"><span class="lbl">City</span><div class="chips">' + Object.keys(CITIES).map(function (c) { return '<button class="chip' + (f.city === c ? " on" : "") + '" data-city="' + esc(c) + '">' + esc(c) + '</button>'; }).join("") + '</div>' +
+    '<span class="lbl">Areas</span><div class="chips">' + CITIES[f.city].map(function (a) { return '<button class="chip' + (f.areas.indexOf(a) > -1 ? " on" : "") + '" data-area="' + esc(a) + '">' + esc(a) + '</button>'; }).join("") + '</div>' +
+    '<span class="lbl">Search for</span><div class="chips">' + TERMS.map(function (t) { return '<button class="chip' + (f.terms.indexOf(t) > -1 ? " on" : "") + '" data-term="' + esc(t) + '">' + esc(t) + '</button>'; }).join("") + '</div>' +
+    '<span class="lbl">Places per area: <b style="color:#E9CF9B" id="perV">' + f.per + '</b></span><input class="range" type="range" min="10" max="80" step="10" value="' + f.per + '" id="per"><p class="muted small">Google Maps returns the best-known places first. 20 to 30 per area is usually the sweet spot.</p>' +
+    '<div class="cost"><div><b id="costV">' + money(e.cost) + '</b><span> at most</span></div><span id="costS">' + e.strings + ' search' + (e.strings === 1 ? "" : "es") + ' · up to ' + e.places + ' places</span></div>' +
+    (l != null && e.cost > l ? '<div class="err">That is more than your ' + money(l) + ' left this month. Choose fewer areas or fewer places.</div>' : "") +
+    (rep.length ? '<div class="warn"><b>Searched recently:</b> ' + rep.map(function (r) { return esc(r[0].replace(", " + f.city, "")) + " (" + ago(r[1]) + ")"; }).join(", ") + '. Searching again mostly returns the same places, and you pay for them again.</div>' : "") +
+    '<div style="display:grid;gap:8px;margin-top:14px">' +
+    (rep.length && rep.length < e.strings ? '<button class="btn pri block" data-act="search-new">Search only the new ones</button><button class="btn block" data-act="search">Search everything again</button>' : '<button class="btn pri block" data-act="search"' + (!e.strings ? " disabled" : "") + '>' + (rep.length ? "Search again anyway" : "Find hosts") + '</button>') +
+    '</div></div>';
+  if (S.searches.length) h += '<p class="lbl" style="margin-top:22px">Recent searches</p><div class="card">' + S.searches.slice(0, 8).map(function (s) { return '<div class="hist"><b style="color:#E9E3D8">' + esc((s.strings || []).length + " area" + ((s.strings || []).length > 1 ? "s" : "")) + '</b> · ' + ago(s.at) + ' · ' + s.scanned + ' places, ' + s.added + ' new hosts<br>' + esc((s.strings || []).slice(0, 4).join(" · ")) + ((s.strings || []).length > 4 ? "…" : "") + '</div>'; }).join("") + '</div>';
+  return h;
+}
+function resultBox(r) {
+  if (r.error) return '<div class="err">' + esc(r.error) + (r.runId ? ' <a href="https://console.apify.com/actors/runs/' + encodeURIComponent(r.runId) + '" target="_blank" rel="noopener" style="text-decoration:underline">Open in Apify</a>' : "") + '</div>';
+  return '<div class="ok"><b>' + r.added + ' new host' + (r.added === 1 ? "" : "s") + ' found</b> from ' + r.scanned + ' places.' + (r.known ? " " + r.known + " you already had." : "") + (r.merged ? " " + (r.merged === 1 ? "1 extra listing was matched to a host with several apartments." : r.merged + " extra listings were matched to hosts with several apartments.") : "") +
+    '<br><span class="small">Skipped: ' + r.notShortlet + ' not shortlets, ' + r.nophone + ' without a phone, ' + r.closed + ' closed.</span>' + (r.added ? '<div style="margin-top:10px"><button class="btn sm" data-go="today">Start messaging</button></div>' : "") + '</div>';
+}
+function updateRunTime() { var el = $("#runTime"); if (el && RUN) el.textContent = Math.round((now() - RUN.started) / 1000) + "s · " + (RUN.status ? RUN.status.toLowerCase().replace("_", " ") : "starting"); }
+setInterval(updateRunTime, 1000);
+
+function leadListHtml() {
+  var all = Object.values(S.leads), q = leadFilter.q.trim().toLowerCase();
+  var list = all.filter(function (l) { return (leadFilter.stage === "all" || l.status === leadFilter.stage) && (leadFilter.kind === "all" || l.kind === leadFilter.kind) && (!q || (l.name + " " + l.area + " " + l.phone + " " + l.listings.map(function (x) { return x.name; }).join(" ")).toLowerCase().indexOf(q) > -1); }).sort(function (a, b) { return b.score - a.score; });
+  return list.length ? list.slice(0, 150).map(function (l) { return leadCard(l); }).join("") + (list.length > 150 ? '<p class="muted small" style="text-align:center;margin-top:12px">Showing the best 150. Search to find others.</p>' : "") : '<div class="list-empty">' + (all.length ? "No hosts match." : "No hosts yet. Find some first.") + '</div>';
+}
+function viewLeads() {
+  var all = Object.values(S.leads);
+  var counts = {}; all.forEach(function (l) { counts[l.status] = (counts[l.status] || 0) + 1; });
+  return '<h1>Leads</h1><p class="sub">' + all.length + ' hosts saved on this phone. Hosts with several listings are grouped by phone number.</p>' +
+    '<div class="search" style="margin-top:14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input class="inp" id="q" type="search" placeholder="Search name, area or number" value="' + esc(leadFilter.q) + '"></div>' +
+    '<div class="chips" style="margin-top:10px">' + [["all", "All"]].concat(STAGES).map(function (s) { var n = s[0] === "all" ? all.length : counts[s[0]] || 0; return '<button class="chip' + (leadFilter.stage === s[0] ? " on" : "") + '" data-stage="' + s[0] + '">' + s[1] + '<span class="n">' + n + '</span></button>'; }).join("") + '</div>' +
+    '<div class="seg" style="margin-top:10px">' + [["all", "Every type"], ["shortlet", "Shortlets"], ["agent", "Agents"], ["hotel", "Hotels"]].map(function (k) { return '<button class="' + (leadFilter.kind === k[0] ? "on" : "") + '" data-kind="' + k[0] + '">' + k[1] + '</button>'; }).join("") + '</div>' +
+    '<div id="leadList">' + leadListHtml() + '</div>';
+}
+
+function viewSettings() {
+  var a = S.acct, l = left();
+  return '<h1>Settings</h1><p class="sub">Everything stays on this phone. Your token is only sent to Apify.</p>' +
+    '<div class="card"><span class="lbl">Apify API token</span><input class="inp" id="token" type="password" autocomplete="off" placeholder="apify_api_…" value="' + esc(S.token) + '"><p class="muted small" style="margin-top:8px">Apify Console → Settings → API &amp; Integrations → copy the Personal API token.</p>' +
+    '<button class="btn pri block" style="margin-top:12px" data-act="token">Check and save</button>' +
+    (a ? '<div class="ok">Connected to <b>' + esc(a.user) + '</b>' + (l != null ? '. ' + money(l) + ' of ' + money(a.limit) + ' left this month, about ' + Math.floor(l / PRICE_PER_PLACE).toLocaleString() + ' places.' : ".") + '</div>' : "") + '</div>' +
+    '<div class="card"><span class="lbl">Your first name (used in messages)</span><input class="inp" id="me" value="' + esc(S.me) + '">' +
+    '<span class="lbl">New hosts to message per day</span><input class="range" type="range" min="5" max="30" step="1" value="' + S.dailyCap + '" id="cap"><p class="muted small"><b id="capV" style="color:#E9CF9B">' + S.dailyCap + '</b> a day. More than about 20 new chats a day can get a WhatsApp number restricted.</p></div>' +
+    '<div class="card"><span class="lbl">Backup</span><p class="muted small">Leads live only on this phone. Export a backup now and then.</p><div class="acts"><button class="btn sm" data-act="csv">Export spreadsheet (CSV)</button><button class="btn sm" data-act="backup">Download backup</button><label class="btn sm">Restore backup<input type="file" accept="application/json" hidden id="restore"></label></div></div>' +
+    '<div class="card"><span class="lbl">How it saves money</span><ul class="muted small" style="margin-left:18px;display:grid;gap:6px"><li>Each search has a hard spending cap set on Apify, so it can never cost more than the price shown.</li><li>No paid extras: no place details, photos, reviews or filters.</li><li>Warns you before repeating a search from the last 14 days.</li><li>Hosts are matched by phone number, so the same host is never saved twice.</li></ul></div>';
+}
+
+/* ============ lead sheet + message sheet ============ */
+function sheet(html) { closeSheet(); var s = document.createElement("div"); s.className = "sheet"; s.id = "sheet"; s.innerHTML = '<div class="panel" role="dialog" aria-modal="true">' + html + '</div>'; s.addEventListener("click", function (e) { if (e.target === s) closeSheet(); }); document.body.appendChild(s); document.body.style.overflow = "hidden"; }
+function closeSheet() { var s = $("#sheet"); if (s) s.remove(); document.body.style.overflow = ""; }
+var xBtn = '<button class="x" data-act="close" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>';
+
+function openLead(id) {
+  var l = S.leads[id]; if (!l) return;
+  sheet('<div class="panel-h"><h2>' + esc(l.name) + '</h2>' + xBtn + '</div><p class="muted small">Found ' + ago(l.found) + (l.firstAt ? " · first messaged " + ago(l.firstAt) : "") + '</p>' +
+    '<div class="kv"><div><span>WhatsApp</span><b>' + esc(prettyPhone(l.phone)) + '</b></div><div><span>Listings</span><b>' + l.units + '</b></div><div><span>Area</span><b>' + esc(l.area || "Unknown") + '</b></div><div><span>Rating</span><b>' + (l.rating ? "★ " + l.rating + " · " + l.reviews + " reviews" : "None yet") + '</b></div></div>' +
+    (!l.mobile ? '<div class="warn">This looks like a landline. It may not be on WhatsApp.</div>' : "") +
+    '<span class="lbl">Stage</span><div class="chips">' + STAGES.map(function (s) { return '<button class="chip' + (l.status === s[0] ? " on" : "") + '" data-setstage="' + s[0] + '" data-id="' + l.id + '">' + s[1] + '</button>'; }).join("") + '</div>' +
+    '<span class="lbl">Send on WhatsApp</span><div style="display:grid;gap:7px">' + Object.keys(TEMPLATES).map(function (k) { return '<button class="btn block" style="justify-content:space-between" data-msg="' + l.id + '" data-type="' + k + '"><span>' + TEMPLATES[k].label + '</span>' + waIc + '</button>'; }).join("") + '</div>' +
+    '<span class="lbl">Sample booking page link (for "I made this for you")</span><input class="inp" id="sample" placeholder="https://hostvalehq.github.io/book/?h=…" value="' + esc(l.sample || "") + '" data-id="' + l.id + '">' +
+    '<span class="lbl">Notes</span><textarea class="inp" id="notes" data-id="' + l.id + '" style="min-height:80px" placeholder="What they said, how many units, best time to call">' + esc(l.notes || "") + '</textarea>' +
+    '<span class="lbl">Listings on Google Maps</span><div class="card" style="margin-top:0;padding:4px 14px">' + l.listings.map(function (x) { return '<div class="listing"><div><b>' + esc(x.name) + '</b><div class="muted small">' + esc(x.address) + (x.category ? " · " + esc(x.category) : "") + '</div></div>' + (x.maps ? '<a class="btn sm" href="' + esc(x.maps) + '" target="_blank" rel="noopener">Map</a>' : "") + '</div>'; }).join("") + '</div>' +
+    ((l.touches || []).length ? '<span class="lbl">History</span>' + l.touches.slice().reverse().map(function (t) { return '<div class="hist">' + esc(TEMPLATES[t.type] ? TEMPLATES[t.type].label : t.type) + ' · ' + new Date(t.at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) + '</div>'; }).join("") : "") +
+    '<button class="btn red block" style="margin-top:18px" data-act="delete" data-id="' + l.id + '">Delete this host</button>');
+}
+function openMessage(id, type) {
+  var l = S.leads[id]; if (!l) return; var t = TEMPLATES[type] || TEMPLATES.opener;
+  var newContact = l.status === "new", over = newContact && sentToday() >= S.dailyCap;
+  sheet('<div class="panel-h"><h2>' + esc(t.label) + '</h2>' + xBtn + '</div><p class="muted small">To ' + esc(l.name) + ' · ' + esc(prettyPhone(l.phone)) + '. Edit anything, it is worded a little differently each time so it never looks copy-pasted.</p>' +
+    '<div class="seg" style="margin-top:12px">' + Object.keys(TEMPLATES).map(function (k) { return '<button class="' + (k === type ? "on" : "") + '" data-msg="' + l.id + '" data-type="' + k + '">' + TEMPLATES[k].label.replace(" (day 3)", "").replace(" (day 7)", "") + '</button>'; }).join("") + '</div>' +
+    '<textarea class="inp" id="msgText" style="margin-top:12px">' + esc(t.make(l)) + '</textarea>' +
+    (type === "sample" && !l.sample ? '<div class="warn">Add the sample booking page link in this host\'s details first, or paste it into the message.</div>' : "") +
+    (over ? '<div class="warn">You have already messaged ' + S.dailyCap + ' new hosts today. Sending more risks your WhatsApp number. Better to continue tomorrow.</div>' : "") +
+    '<div style="display:grid;gap:8px;margin-top:12px"><button class="btn wa block" data-act="send" data-id="' + l.id + '" data-type="' + type + '">' + waIc + 'Open WhatsApp</button><button class="btn block" data-act="reroll" data-id="' + l.id + '" data-type="' + type + '">Word it differently</button></div>');
+}
+function markSent(l, type) {
+  var wasNew = l.status === "new";
+  l.touches = (l.touches || []).concat([{ type: type, at: now() }]);
+  if (wasNew) { l.status = "messaged"; l.firstAt = now(); S.sentLog[dkey()] = sentToday() + 1; }
+  if (type === "convert" && l.status !== "paying") l.status = "setup";
+  save();
+}
+
+/* ============ events ============ */
+document.addEventListener("click", function (e) {
+  var b = e.target.closest("button,[data-go]"); if (!b) return;
+  var d = b.dataset;
+  if (d.tab) return go(d.tab);
+  if (d.go) return go(d.go);
+  if (d.city) { S.find.city = d.city; S.find.areas = [CITIES[d.city][0]]; save(); return render(); }
+  if (d.area) { var A = S.find.areas, i = A.indexOf(d.area); i > -1 ? A.splice(i, 1) : A.push(d.area); save(); return render(); }
+  if (d.term) { var T = S.find.terms, j = T.indexOf(d.term); j > -1 ? (T.length > 1 && T.splice(j, 1)) : T.push(d.term); save(); return render(); }
+  if (d.stage) { leadFilter.stage = d.stage; return render(); }
+  if (d.kind) { leadFilter.kind = d.kind; return render(); }
+  if (d.open) return openLead(d.open);
+  if (d.msg) return openMessage(d.msg, d.type);
+  if (d.setstage) { var L = S.leads[d.id]; L.status = d.setstage; if (d.setstage === "messaged" && !L.firstAt) L.firstAt = now(); save(); openLead(d.id); return render(); }
+  var act = d.act; if (!act) return;
+  if (act === "close") return closeSheet();
+  if (act === "search") return startSearch(false);
+  if (act === "search-new") return startSearch(true);
+  if (act === "cancel") return cancelSearch();
+  if (act === "reroll") return openMessage(d.id, d.type);
+  if (act === "send") { var l = S.leads[d.id], txt = $("#msgText").value; markSent(l, d.type); window.open(waUrl(l.phone, txt), "_blank"); closeSheet(); render(); toast("Marked as sent. Follow-up reminders are set."); return; }
+  if (act === "delete") { if (confirm("Delete this host?")) { delete S.leads[d.id]; save(); closeSheet(); render(); } return; }
+  if (act === "token") {
+    var tk = $("#token").value.trim(); if (!tk) return toast("Paste your token first");
+    b.disabled = true; b.textContent = "Checking…";
+    checkAccount(tk).then(function (i) { S.token = tk; S.acct = i; save(); toast("Apify connected"); render(); }).catch(function (er) { b.disabled = false; b.textContent = "Check and save"; toast(er.status === 401 ? "Apify rejected that token" : "Could not reach Apify. Check your internet."); });
+    return;
+  }
+  if (act === "csv") {
+    var rows = [["Name", "WhatsApp", "Area", "Listings", "Type", "Rating", "Reviews", "Stage", "First messaged", "Notes"]].concat(Object.values(S.leads).map(function (l) { return [l.name, prettyPhone(l.phone), l.area, l.units, l.kind, l.rating, l.reviews, stageOf(l.status)[1], l.firstAt ? new Date(l.firstAt).toLocaleDateString("en-GB") : "", l.notes]; }));
+    return download("hostvale-leads.csv", rows.map(function (r) { return r.map(function (v) { var s = String(v == null ? "" : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }).join(","); }).join("\n"), "text/csv");
+  }
+  if (act === "backup") { var c = Object.assign({}, S); delete c.token; return download("hostvale-leads-backup.json", JSON.stringify(c), "application/json"); }
+});
+document.addEventListener("input", function (e) {
+  var t = e.target;
+  if (t.id === "per") { S.find.per = +t.value; var e2 = estimate(); $("#perV").textContent = t.value; $("#costV").textContent = money(e2.cost); $("#costS").textContent = e2.strings + " search" + (e2.strings === 1 ? "" : "es") + " · up to " + e2.places + " places"; }
+  if (t.id === "q") { leadFilter.q = t.value; $("#leadList").innerHTML = leadListHtml(); }
+  if (t.id === "me") { S.me = t.value.trim() || "Musty"; save(); }
+  if (t.id === "cap") { S.dailyCap = +t.value; $("#capV").textContent = t.value; save(); }
+  if (t.id === "notes") { S.leads[t.dataset.id].notes = t.value; save(); }
+  if (t.id === "sample") { S.leads[t.dataset.id].sample = t.value.trim(); save(); }
+});
+ document.addEventListener("change", function (e) {
+  if (e.target.id === "per") { save(); render(); return; }
+  if (e.target.id !== "restore" || !e.target.files[0]) return;
+  var r = new FileReader(); r.onload = function () { try { var x = JSON.parse(r.result); if (!x.leads) throw 0; var tk = S.token, ac = S.acct; S = Object.assign({}, DEF, x, { token: tk, acct: ac }); save(); toast("Backup restored"); render(); } catch (er) { toast("That file is not a Hostvale Leads backup"); } }; r.readAsText(e.target.files[0]);
+});
+function download(name, text, type) { var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: type })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 600); }
+document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeSheet(); });
+$("#creditBtn").addEventListener("click", function () { go("settings"); });
+
+render(); refreshCredit();
+</script>
+</body>
+</html>

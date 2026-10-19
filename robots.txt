@@ -4,5 +4,6 @@ Disallow: /app/
 Disallow: /admin/
 Disallow: /checkin/
 Disallow: /review/
+Disallow: /leads/
 
 Sitemap: https://hostvalehq.github.io/sitemap.xml
