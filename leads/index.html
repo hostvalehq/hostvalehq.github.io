@@ -132,7 +132,7 @@ textarea.inp{min-height:150px;line-height:1.5;resize:vertical}
 "use strict";
 /* ============ storage (this phone only) ============ */
 var KEY = "hvl_v1";
-var DEF = { token: "", acct: null, me: "Musty", dailyCap: 15, leads: {}, searches: [], sentLog: {}, tab: "today", find: { city: "Lagos", areas: ["Lekki Phase 1"], terms: ["shortlet apartment"], per: 20 } };
+var DEF = { token: "", acct: null, me: "Musty", dailyCap: 15, lastBackup: 0, leads: {}, searches: [], sentLog: {}, tab: "today", find: { city: "Lagos", areas: ["Lekki Phase 1"], terms: ["shortlet apartment"], per: 20 } };
 var S = load();
 function load() { try { var x = JSON.parse(localStorage.getItem(KEY) || "null"); return x ? Object.assign({}, DEF, x, { find: Object.assign({}, DEF.find, x.find || {}) }) : JSON.parse(JSON.stringify(DEF)); } catch (e) { return JSON.parse(JSON.stringify(DEF)); } }
 function repairPhones() {
@@ -236,12 +236,12 @@ function placeOf(l) { return (l.area || "").replace(/\bPhase I\b/, "Phase 1").re
 function hook(l) {
   var n = shortName(l), area = placeOf(l);
   if (l.units > 1) return pick([
-    "I saw you have " + l.units + " apartments on Google Maps. That's a lot to keep track of 😅 How do you know which one is free on which dates? Notebook, WhatsApp, or just memory?",
+    "I saw you have " + l.units + " apartments on Google Maps. That's a lot to keep track of. How do you know which one is free on which dates? Notebook, WhatsApp, or just memory?",
     "noticed you run " + l.units + " apartments in " + area + ". Honest question: how do you avoid two guests booking the same weekend?"
   ]);
   if (l.reviews >= 40) return pick([
-    (l.rating ? l.rating + "★ from " : "") + l.reviews + " reviews on Google is serious 👏 You must get a lot of \"is it free this weekend?\" messages. How do you keep up with them, especially late at night?",
-    "I saw your " + l.reviews + " reviews on Google, that's really good 👏 Quick one: when a guest asks \"how much for 3 nights?\", do you work out the total yourself each time?"
+    (l.rating ? l.rating + " stars from " : "") + l.reviews + " reviews on Google is serious. You must get a lot of \"is it free this weekend?\" messages. How do you keep up with them, especially late at night?",
+    "I saw your " + l.reviews + " reviews on Google, that's really good. Quick one: when a guest asks \"how much for 3 nights?\", do you work out the total yourself each time?"
   ]);
   return pick([
     "quick question about " + n + ": do most of your guests find you on Airbnb, or message you directly on WhatsApp?",
@@ -251,27 +251,32 @@ function hook(l) {
 }
 var TEMPLATES = {
   opener: { label: "First message", make: function (l) {
-    return hi() + ", is this " + shortName(l) + "? 🙂 " + pick(["I'm " + S.me + ", I build apps for shortlet owners (not booking 😅).", "I'm " + S.me + ". Not a guest 😅 I build apps for shortlet owners."]) + "\n\n" + (function (h) { return h.charAt(0).toUpperCase() + h.slice(1); })(hook(l));
+    return hi() + ", is this " + shortName(l) + "? " + pick(["I'm " + S.me + ", I build apps for shortlet owners (not booking).", "I'm " + S.me + ". Not a guest, I build apps for shortlet owners."]) + "\n\n" + (function (h) { return h.charAt(0).toUpperCase() + h.slice(1); })(hook(l));
   } },
   pitch: { label: "After they reply", make: function (l) {
-    return pick(["That's what most hosts I talk to say 😅", "Makes sense, most hosts I talk to are the same.", "I hear that a lot from hosts in " + placeOf(l) + "."]) +
+    return pick(["That's what most hosts I talk to say.", "Makes sense, most hosts I talk to are the same.", "I hear that a lot from hosts in " + placeOf(l) + "."]) +
       "\n\nI'm " + S.me + ". I built Hostvale for Nigerian shortlet hosts. You get your own booking page where guests see your photos, free dates and the full price, and send a request without 20 messages of back and forth. No Airbnb fee on those bookings." +
       "\n\nIt also stops double bookings (even with Airbnb), and shows who still owes you and which caution fee to refund." +
-      "\n\n" + pick(["Can I set up " + shortName(l) + " for you? It's free, and I'll do everything, just send your prices.", "Want me to set it up for " + shortName(l) + "? Free, and I do all the work. You just send prices."]);
+      "\n\n" + pick(["It's free for one apartment and you can sign up yourself in about two minutes: hostvalehq.github.io. Want a short video of how it works first?", "You can try it yourself, free for one apartment: hostvalehq.github.io. If you'd like to see it first, I can send a short video."]);
   } },
   sample: { label: "I made this for you", make: function (l) {
-    return hi() + ", is this " + shortName(l) + "? 🙂\n\nI made you a booking page as a sample 👀\n" + (l.sample || "[paste the booking page link]") +
-      "\n\nGuests see your photos, free dates and the full price, then send you a request on WhatsApp. No Airbnb fee. " + pick(["It's yours if you want it, free.", "Want me to hand it over? It's free.", "If you like it, it's yours, free."]);
+    return hi() + ", is this " + shortName(l) + "?\n\nI made a sample booking page to show you what it looks like:\n" + (l.sample || "[paste the booking page link]") +
+      "\n\nGuests see your photos, free dates and the full price, then send you a request on WhatsApp. No Airbnb fee. " + pick(["You can get your own free for one apartment at hostvalehq.github.io, it takes about two minutes.", "If you like it, you can set up your own free at hostvalehq.github.io.", "Your own is free for one apartment: hostvalehq.github.io. Tell me if you get stuck."]);
   } },
-  follow3: { label: "Follow-up (day 3)", make: function (l) { return pick([
-    "Hi again 🙂 just making sure my message didn't get buried. Happy to show you what a booking page for " + shortName(l) + " would look like, no pressure",
-    "Hello, sorry to bump this. If you send me your nightly price I'll make a sample booking page for " + shortName(l) + " so you can see it first. Free",
+  // Keys follow3 and follow7 are unchanged so saved history still works. They are sent on day 2 and day 5.
+  follow3: { label: "Follow-up (day 2)", make: function (l) { return pick([
+    "Hi again, just making sure my message didn't get buried. Happy to show you what a booking page for " + shortName(l) + " would look like, no pressure.",
+    "Hello, sorry to bump this. If it helps, I can send a short video of how Hostvale works, about 40 seconds. It's free for one apartment."
   ]); } },
-  follow7: { label: "Last follow-up (day 7)", make: function () { return pick([
-    "Last one from me 🙏 if double bookings or chasing balances ever become a headache, I'm here. hostvalehq.github.io",
-    "No wahala if now isn't a good time 🙏 whenever you want direct bookings without the back and forth: hostvalehq.github.io"
+  follow7: { label: "Last follow-up (day 5)", make: function () { return pick([
+    "Last one from me. If double bookings or chasing balances ever become a headache, I'm here: hostvalehq.github.io",
+    "No wahala if now isn't a good time. Whenever you want direct bookings without the back and forth: hostvalehq.github.io"
   ]); } },
-  convert: { label: "Free month ending", make: function () { return "How's Hostvale going so far? Your free month ends soon. You're one of my first 10 hosts, so it's ₦3,000/month instead of ₦5,000, locked forever. Should I keep you on Pro?"; } }
+  // Key "convert" is unchanged. Hostvale has no trial, so this message makes no promise about a free month or a special price.
+  convert: { label: "Check in after sign-up", make: function () { return pick([
+    "How's Hostvale going so far? Is anything slowing you down with the calendar or the booking page? If you outgrow one apartment, Pro is ₦5,000 a month for up to 5. Tell me what you need and I'll point you to the right plan.",
+    "Checking in on Hostvale. Have you added your apartment and your first booking yet? If anything is unclear, tell me where you got stuck. Pro (₦5,000 a month, up to 5 apartments) is there when you grow."
+  ]); } }
 };
 function waUrl(phone, text) { return "https://wa.me/" + phone + "?text=" + encodeURIComponent(text); }
 
@@ -281,8 +286,10 @@ var stageOf = function (k) { return STAGES.find(function (s) { return s[0] === k
 function nextFollow(l) {
   if (l.status !== "messaged" || !l.firstAt) return null;
   var sent = (l.touches || []).map(function (t) { return t.type; });
-  if (sent.indexOf("follow3") < 0) return { type: "follow3", due: l.firstAt + 3 * DAY };
-  if (sent.indexOf("follow7") < 0) return { type: "follow7", due: l.firstAt + 7 * DAY };
+  // The keys "follow3" and "follow7" are kept so history already saved on leads still matches.
+  // They now mean the day 2 follow-up and the day 5 (last) follow-up.
+  if (sent.indexOf("follow3") < 0) return { type: "follow3", due: l.firstAt + 2 * DAY };
+  if (sent.indexOf("follow7") < 0) return { type: "follow7", due: l.firstAt + 5 * DAY };
   return null;
 }
 var dueList = function () { return Object.values(S.leads).map(function (l) { return { l: l, f: nextFollow(l) }; }).filter(function (x) { return x.f && x.f.due <= now() + 3600e3; }).sort(function (a, b) { return a.f.due - b.f.due; }); };
@@ -390,6 +397,8 @@ function viewToday() {
   var setUp = counts.setup + counts.paying, pct = Math.min(1, setUp / 10), C = 2 * Math.PI * 22;
   var h = '<h1>' + (sent >= cap ? "Today's messages are done." : due.length ? due.length + " follow-up" + (due.length > 1 ? "s" : "") + " due." : all.length ? "Who to message today." : "Find your first hosts.") + '</h1><p class="sub">' + sent + ' of ' + cap + ' new hosts messaged today. Keeping it under ' + cap + ' a day protects your WhatsApp number.</p>';
   h += '<div class="card goal"><svg class="ring" viewBox="0 0 54 54"><circle cx="27" cy="27" r="22" fill="none" stroke="#262B34" stroke-width="6"/><circle cx="27" cy="27" r="22" fill="none" stroke="#D9BC85" stroke-width="6" stroke-linecap="round" stroke-dasharray="' + (C * pct) + ' ' + C + '" transform="rotate(-90 27 27)"/></svg><div><b>' + setUp + ' of 10 hosts set up</b><p class="muted small">' + counts.messaged + ' messaged · ' + counts.replied + ' replied · ' + counts.paying + ' paying</p></div></div>';
+  // Leads are stored only in this browser, so remind the user to back up once there is something worth losing.
+  if (all.length >= 5 && now() - (S.lastBackup || 0) > 7 * DAY) h += '<div class="card"><b>Back up your leads</b><p class="muted small" style="margin-top:4px">' + (S.lastBackup ? "Your last backup was " + ago(S.lastBackup) + "." : "You have not made a backup yet.") + ' Your leads live only in this browser, so clearing it would delete them all.</p><button class="btn sm" style="margin-top:10px" data-act="backup">Download backup</button></div>';
   if (!all.length) return h + '<div class="card"><p>Search Google Maps for shortlet hosts in the areas you choose. Each host comes with a WhatsApp number and a ready message.</p><button class="btn pri block" style="margin-top:14px" data-go="find">Find hosts</button></div>';
   var replied = all.filter(function (l) { return l.status === "replied"; });
   if (replied.length) h += '<p class="lbl" style="margin-top:22px">They replied: send the pitch</p>' + replied.map(function (l) { return leadCard(l); }).join("");
@@ -475,7 +484,7 @@ function openMessage(id, type) {
   var l = S.leads[id]; if (!l) return; var t = TEMPLATES[type] || TEMPLATES.opener;
   var newContact = l.status === "new", over = newContact && sentToday() >= S.dailyCap;
   sheet('<div class="panel-h"><h2>' + esc(t.label) + '</h2>' + xBtn + '</div><p class="muted small">To ' + esc(l.name) + ' · ' + esc(prettyPhone(l.phone)) + '. Edit anything, it is worded a little differently each time so it never looks copy-pasted.</p>' +
-    '<div class="seg" style="margin-top:12px">' + Object.keys(TEMPLATES).map(function (k) { return '<button class="' + (k === type ? "on" : "") + '" data-msg="' + l.id + '" data-type="' + k + '">' + TEMPLATES[k].label.replace(" (day 3)", "").replace(" (day 7)", "") + '</button>'; }).join("") + '</div>' +
+    '<div class="seg" style="margin-top:12px">' + Object.keys(TEMPLATES).map(function (k) { return '<button class="' + (k === type ? "on" : "") + '" data-msg="' + l.id + '" data-type="' + k + '">' + TEMPLATES[k].label.replace(" (day 2)", "").replace(" (day 5)", "") + '</button>'; }).join("") + '</div>' +
     '<textarea class="inp" id="msgText" style="margin-top:12px">' + esc(t.make(l)) + '</textarea>' +
     (type === "sample" && !l.sample ? '<div class="warn">Add the sample booking page link in this host\'s details first, or paste it into the message.</div>' : "") +
     (over ? '<div class="warn">You have already messaged ' + S.dailyCap + ' new hosts today. Sending more risks your WhatsApp number. Better to continue tomorrow.</div>' : "") +
@@ -528,7 +537,7 @@ document.addEventListener("click", function (e) {
     var rows = [["Name", "WhatsApp", "Area", "Listings", "Type", "Rating", "Reviews", "Stage", "First messaged", "Notes"]].concat(Object.values(S.leads).map(function (l) { return [l.name, prettyPhone(l.phone), l.area, l.units, l.kind, l.rating, l.reviews, stageOf(l.status)[1], l.firstAt ? new Date(l.firstAt).toLocaleDateString("en-GB") : "", l.notes]; }));
     return download("hostvale-leads.csv", rows.map(function (r) { return r.map(function (v) { var s = String(v == null ? "" : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }).join(","); }).join("\n"), "text/csv");
   }
-  if (act === "backup") { var c = Object.assign({}, S); delete c.token; return download("hostvale-leads-backup.json", JSON.stringify(c), "application/json"); }
+  if (act === "backup") { S.lastBackup = now(); save(); var c = Object.assign({}, S); delete c.token; download("hostvale-leads-backup.json", JSON.stringify(c), "application/json"); toast("Backup downloaded"); return render(); }
 });
 document.addEventListener("input", function (e) {
   var t = e.target;
